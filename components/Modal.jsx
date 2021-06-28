@@ -1,6 +1,6 @@
-import { Modal as RNModal, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
-
 import React from 'react'
+import { Modal as RNModal, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
+import COLORS from '../styles/Colors'
 
 const ModalItem = ({modalVisible, closeModal, itemSelected, onDelete}) => {
 
@@ -9,13 +9,13 @@ const ModalItem = ({modalVisible, closeModal, itemSelected, onDelete}) => {
 		<RNModal animationType='slide' visible={modalVisible} transparent={true}>
 			<View style={styles.screen}>
 				<View style={styles.container}>
-					<Text style={styles.message}>Estás seguro que deseas quitar {itemSelected.ticker} de tu lista?</Text>
+					<Text style={styles.message}>Estás seguro que deseas quitar {itemSelected.name} de tu lista?</Text>
 					<View style={styles.buttonContainer}>
 						<TouchableHighlight style={{...styles.button, ...styles.cancelButton}} onPress={closeModal}>
-							<Text> Cancelar </Text>
+							<Text style={styles.buttonText}> Cancelar </Text>
 						</TouchableHighlight>
 						<TouchableHighlight style={{...styles.button, ...styles.confirmButton}} onPress={onDelete}>
-							<Text> Eliminar </Text>
+							<Text style={styles.buttonText}> Eliminar </Text>
 						</TouchableHighlight>
 					</View>
 				</View>
@@ -35,13 +35,13 @@ const styles = StyleSheet.create({
 		padding: 10,
 		justifyContent: 'center',
 		alignSelf: 'center',
-		backgroundColor: '#242526',
+		backgroundColor: COLORS.background,
 		borderRadius: 10,
-		borderColor: '#32E0C4',
+		borderColor: COLORS.auxiliary,
 		borderWidth: 1,
 	},
 	message: {
-		backgroundColor: '#242526',
+//		backgroundColor: '#242526',
 		color: 'white',
 		fontSize: 18,
 		marginHorizontal: 10
@@ -59,11 +59,14 @@ const styles = StyleSheet.create({
 		padding: 10,
 		marginVertical: 5
 	}, 
+	buttonText: {
+		color: COLORS.mainFont,
+	},
 	cancelButton: {
 		backgroundColor: 'darkgrey',
 	},
 	confirmButton: {
-		backgroundColor: '#32E0C4',
+		backgroundColor: COLORS.secondary,
 	}
 });
 

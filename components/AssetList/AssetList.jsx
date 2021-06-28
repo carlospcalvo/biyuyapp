@@ -1,8 +1,8 @@
 import {FlatList, StyleSheet, Text, TouchableHighlight, View} from 'react-native';
 import React, {useState} from 'react';
-
 import AssetListItem from './AssetListItem';
 import ModalItem from '../Modal';
+import COLORS from '../../styles/Colors'
 
 const AssetList = ({data, onDelete}) => {
 	const [itemSelected, setItemSelected] = useState({})
@@ -26,19 +26,31 @@ const AssetList = ({data, onDelete}) => {
 			<FlatList
 				style={styles.listContainer}
 				data={data}
-				renderItem={data => <AssetListItem data={data} handleModal={handleModalOpen}/>}
+				renderItem={({ item }) => <AssetListItem item={item} handleModal={handleModalOpen}/>}
 				keyExtractor={item => item.id.toString()}
 			/>
-			<ModalItem modalVisible={modalVisible} closeModal={handleModalClose} itemSelected={itemSelected} onDelete={handleConfirmDelete} />
+			{ 
+				onDelete && 
+				<ModalItem 
+					modalVisible={modalVisible} 
+					closeModal={handleModalClose} 
+					itemSelected={itemSelected} 
+					onDelete={handleConfirmDelete} 
+				/> 
+			}
 		</>
 	);
 }
 
 const styles = StyleSheet.create({
 	listContainer: {
+		width: '100%',
 		marginTop: 20,
-		padding: 5,
-		backgroundColor: '#131722', //'#242526',
+		/* padding: 5, */
+		backgroundColor: COLORS.background, //'#242526',
+		/* borderColor: Colors.auxiliary,
+		borderRadius: 20,
+		borderWidth: 1, */
 	},
 });
 

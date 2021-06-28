@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {StyleSheet, Text, TextInput, TouchableHighlight, View} from 'react-native';
+import COLORS from '../styles/Colors'
 
 const AddItem = ({onAdd}) => {
 	const [inputText, setInputText] = useState('')
@@ -26,7 +27,7 @@ const AddItem = ({onAdd}) => {
 				value={inputText}	
 			/>
 			<TouchableHighlight style={{...styles.button, ...styles.addButton}} onPress={() => handleAdd(onAdd)}>
-				<Text>Agregar</Text>
+				<Text style={styles.addButtonText}>Agregar</Text>
 			</TouchableHighlight>
 		</View>
 	);
@@ -36,14 +37,16 @@ const styles = StyleSheet.create({
 	inputContainer: {
 		flexDirection: 'row',
 		alignItems: 'center',
-		justifyContent: 'space-between'
+		justifyContent: 'space-between',
+		marginTop: 15
 	},
 	input: {
-		width: 175,
-		borderBottomColor: '#32E0C4',
+		width: '60%',
+		borderBottomColor: COLORS.auxiliary,
 		borderBottomWidth: 1,
 		margin: 10,
-		color: 'white'
+		color: COLORS.mainFont,
+		fontFamily: 'montserrat-regular',
 	},
 	button: {
 		borderRadius: 20,
@@ -53,9 +56,13 @@ const styles = StyleSheet.create({
 		marginVertical: 5
 	},
 	addButton: {
-		backgroundColor: '#32E0C4',
+		backgroundColor: COLORS.primary,
 		width: 90,
 	},
+	addButtonText: {
+		color: COLORS.mainFont,
+		fontFamily: 'montserrat-regular',
+	},	
 });
 
 
