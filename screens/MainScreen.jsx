@@ -6,18 +6,20 @@ import AddItem from '../components/AddItem'
 import AssetList from '../components/AssetList/AssetList'
 import COLORS from '../styles/Colors'
 import { useDataContext } from '../context/DataContext'
+import { useNavigation } from '@react-navigation/core'
 
 const MainScreen = ({ watchlist, currencies, cryptos }) => {
 	//const {watchlist, currencies, cryptos} = useDataContext()
 	const [tickerList, setTickerList] = useState([...watchlist])
-
+	const navigation = useNavigation();
+	
 	//Hanlders
 	const handleAdd = (asset) => {
 		if(!tickerList.some(element => element.id === asset.id)){
 			setTickerList([...tickerList, asset])
 		} 
 	}
-
+	
 	const handleDelete = selected => setTickerList(tickerList.filter(item => item.id !== selected.id))
 
 	return (
@@ -29,7 +31,7 @@ const MainScreen = ({ watchlist, currencies, cryptos }) => {
 						<Text style={styles.title}>Tu watchlist</Text>
 					</View>
 					{/* <AddItem onAdd={handleAdd}/> */}
-					<AssetList data={tickerList} onDelete={handleDelete}/>
+					<AssetList data={tickerList} onDelete={handleDelete} navigation={navigation}/>
 				</View>
 			</TouchableWithoutFeedback>
 			<StatusBar style="light"/>		

@@ -4,7 +4,7 @@ import AssetListItem from './AssetListItem';
 import ModalItem from '../Modal';
 import COLORS from '../../styles/Colors'
 
-const AssetList = ({data, onDelete}) => {
+const AssetList = ({ navigation, data, onDelete }) => {
 	const [itemSelected, setItemSelected] = useState({})
 	const [modalVisible, setModalVisible] = useState(false)
 	
@@ -26,7 +26,17 @@ const AssetList = ({data, onDelete}) => {
 			<FlatList
 				style={styles.listContainer}
 				data={data}
-				renderItem={({ item }) => <AssetListItem item={item} handleModal={handleModalOpen}/>}
+				renderItem={({ item }) => (
+					<TouchableHighlight
+						style={{width: '100%'}} 
+						onPress={() => navigation.navigate('Detail', {item})}
+						onLongPress={() => handleModalOpen(item.id)}
+						activeOpacity={0.5}
+						underlayColor={COLORS.pressed}
+					>
+						<AssetListItem item={item} handleModal={handleModalOpen}/>
+					</TouchableHighlight>
+				)}
 				keyExtractor={item => item.id.toString()}
 			/>
 			{ 

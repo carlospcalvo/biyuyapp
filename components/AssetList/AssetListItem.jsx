@@ -3,25 +3,20 @@ import { StyleSheet, Text, TouchableHighlight, View } from 'react-native';
 import COLORS from '../../styles/Colors'
 
 const AssetListItem = ({item, handleModal}) => {
+	let priceColor = item.prev_value != item.value ? item.prev_value > item.value ? 'red' : '#13ba15' : 'lightgrey';
+
 	return (
 		item &&
 		<View style={styles.listItem}>
-			<TouchableHighlight 
-				style={{width: '100%'}} 
-				onLongPress={() => handleModal(item.id)}
-				activeOpacity={0.5}
-				underlayColor={COLORS.pressed}
-				>
-				<View style={styles.asset}>
-					<View style={styles.textContainer} >
-						<Text style={styles.assetName}>{item.name}</Text>
-						{ item.ticker && <Text style={styles.assetTicker}>{item.ticker}</Text> }
-					</View>
-					<View style={styles.priceContainer}>
-						<Text style={styles.assetPrice}>{`${item.value} ${item.currency}`}</Text>
-					</View>					
-				</View>				
-			</TouchableHighlight>			
+			<View style={styles.asset}>
+				<View style={styles.textContainer} >
+					<Text style={styles.assetName}>{item.name}</Text>
+					{ item.ticker && <Text style={styles.assetTicker}>{item.ticker}</Text> }
+				</View>
+				<View style={styles.priceContainer}>
+					<Text style={{...styles.assetPrice, color: priceColor}}>{`${item.value} ${item.currency}`}</Text>
+				</View>					
+			</View>			
 		</View>
 	);
 }
@@ -66,7 +61,6 @@ const styles = StyleSheet.create({
 	assetPrice: {
 		fontSize: 20,
 		fontFamily: 'montserrat-regular',
-		color: '#13ba15',
 		textAlign: 'right'
 	},
 });
