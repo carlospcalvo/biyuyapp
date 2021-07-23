@@ -5,33 +5,27 @@ import Header from '../components/Header'
 import AddItem from '../components/AddItem'
 import AssetList from '../components/AssetList/AssetList'
 import COLORS from '../styles/Colors'
-import { useDataContext } from '../context/DataContext'
-import { useNavigation } from '@react-navigation/core'
-
-const MainScreen = ({ watchlist, currencies, cryptos }) => {
-	//const {watchlist, currencies, cryptos} = useDataContext()
-	const [tickerList, setTickerList] = useState([...watchlist])
+import { useNavigation } from '@react-navigation/core';
+import { useSelector, useDispatch } from 'react-redux';
+import { removeFromWatchlist } from '../store/actions/watchlist.action'
+ 
+//{ watchlist, currencies, cryptos }
+const MainScreen = () => {
+	const watchlist = useSelector(state => state.watchlist.items);
+	const dispatch = useDispatch();
 	const navigation = useNavigation();
-	
-	//Hanlders
-	const handleAdd = (asset) => {
-		if(!tickerList.some(element => element.id === asset.id)){
-			setTickerList([...tickerList, asset])
-		} 
-	}
-	
-	const handleDelete = selected => setTickerList(tickerList.filter(item => item.id !== selected.id))
+
+	const handleDelete = selected => dispatch(removeFromWatchlist(selected.id));
+
 
 	return (
 		<>
 			<TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
 				<View style={styles.content}>
-					<Header/>
 					<View style={styles.titleContainer}>
 						<Text style={styles.title}>Tu watchlist</Text>
 					</View>
-					{/* <AddItem onAdd={handleAdd}/> */}
-					<AssetList data={tickerList} onDelete={handleDelete} navigation={navigation}/>
+					<AssetList data={watchlist} onDelete={handleDelete} navigation={navigation}/>
 				</View>
 			</TouchableWithoutFeedback>
 			<StatusBar style="light"/>		
@@ -39,16 +33,10 @@ const MainScreen = ({ watchlist, currencies, cryptos }) => {
 )	
 }
 
-/*
-pleta de colores https://colorhunt.co/palette/eeeeee32e0c40d7377212121
-*/
-
 const styles = StyleSheet.create({
 	content: {
 		backgroundColor: COLORS.background,
-		/* padding: 30, */
 		width: '100%',
-		paddingTop: 25,
 		flex: 1,
 	},
 	titleContainer: {
@@ -64,4 +52,4 @@ const styles = StyleSheet.create({
 
 })
 
-export default MainScreen
+export default MainScreen;

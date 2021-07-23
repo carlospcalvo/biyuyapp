@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet, Text, Dimensions } from 'react-native';
 import COLORS from '../styles/Colors';
 
 const Header = () => {
@@ -10,12 +10,15 @@ const Header = () => {
 	);
 }
 
+const { width } = Dimensions.get('screen')
+
 const styles = StyleSheet.create({
 	container: {
-		height: 40,
-		width: '100%',
+		height: '100%',
+		width,
 		marginTop: '1%',
 		padding: 30,
+		flexDirection: 'row',
 		backgroundColor: COLORS.header,
 		justifyContent: 'center',
 		alignItems: 'center'

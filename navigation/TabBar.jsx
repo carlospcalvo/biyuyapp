@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
 		//position: 'absolute',
 		bottom: 0,
 		width,
-		height: 60,
+		height: '10%',
 		//backgroundColor: Colors.header,
 		justifyContent: 'space-evenly',
 		
@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		justifyContent: 'space-around',
 		elevation: 5,
-		
+		height: '100%'
 	},
 })
 

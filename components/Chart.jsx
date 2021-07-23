@@ -10,15 +10,15 @@ const Chart = ({ asset, historyAvailable, rawData = [] })=> {
 
 	let labels = [0, 6, 13, 20, 27];
 	let data = {
-		labels: rawData.map((item, i) => labels.includes(i) ? item.date.slice(0, -5) : ''),
+		//labels: rawData.map((item, i) => labels.includes(i) ? item.date.slice(0, -5) : ''),
 		datasets: [
 			{
-				data: rawData.map(item => item.value),
-				color: (opacity = 1) => rawData[rawData.length-1].value > asset.value ? 'red' : '#13ba15', // optional
+				data: asset.hasOwnProperty('tag') ? rawData.map(item => item.value) : rawData,
+				//color: (opacity = 1) => rawData[rawData.length-1].value > asset.value ? 'red' : '#13ba15', // optional
 				strokeWidth: 2 // optional
 			}
 		],
-		legend: [`Evolución último mes`] // optional
+		legend: [`Evolución último mes`] 
 	};
 
 	let chartConfig = {

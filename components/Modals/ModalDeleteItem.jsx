@@ -4,12 +4,12 @@ import COLORS from '../../styles/Colors'
 
 const ModalDeleteItem = ({modalVisible, closeModal, itemSelected, onDelete}) => {
 	return (
-		<RNModal animationType='slide' visible={modalVisible} transparent={true}>
+		<RNModal animationType='slide' visible={modalVisible} transparent>
 			<View style={styles.screen}>
 				<View style={styles.container}>
 					<Text style={styles.message}>Estás seguro que deseas quitar {itemSelected.name} de tu lista?</Text>
 					<View style={styles.buttonContainer}>
-						<TouchableHighlight style={{...styles.button, ...styles.cancelButton}} onPress={() => closeModal('delete')}>
+						<TouchableHighlight style={{...styles.button, ...styles.cancelButton}} onPress={() => closeModal}>
 							<Text style={styles.buttonText}> Cancelar </Text>
 						</TouchableHighlight>
 						<TouchableHighlight style={{...styles.button, ...styles.confirmButton}} onPress={onDelete}>

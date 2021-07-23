@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import axios from 'axios';
 import * as date_fns from 'date-fns';
-import {currencies_historical_values, crypto_historical_values} from './historical_values';
+import {currencies_historical_values, crypto_historical_values} from '../data/historical_values';
 
 const DataContext = React.createContext([]);
 

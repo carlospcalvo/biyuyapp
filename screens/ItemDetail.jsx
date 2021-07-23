@@ -1,25 +1,23 @@
 import React from 'react';
 import { StyleSheet, Text, View, Dimensions, ScrollView } from 'react-native';
 import { StatusBar } from 'expo-status-bar'
-import Header from '../components/Header'
 import COLORS from '../styles/Colors';
-import { useDataContext } from '../context/DataContext';
 import Chart from '../components/Chart';
 
 const ItemDetail = ({route}) => {
 	const { item } = route.params
-	const { getCurrenciesHistValues, getCryptoHistValues } = useDataContext();
-	let historyAvailable = [100, 101, 1, 2, 3, 7].includes(item.id);
-	let data;
-
-	if(historyAvailable) data = item.id < 100 ? getCurrenciesHistValues(item.tag) : getCryptoHistValues(item.name.toLowerCase());
+	//const { getCurrenciesHistValues, getCryptoHistValues } = useDataContext();
+	let historyAvailable = true && item.sparkline?.length > 0;
+	//console.log(item.sparkline)
+	//if(historyAvailable) data = item.id < 100 ? getCurrenciesHistValues(item.tag) : getCryptoHistValues(item.name.toLowerCase());
 
 	let priceColor = item.prev_value != item.value ? item.prev_value > item.value ? 'red' : '#13ba15' : 'lightgrey';
+
 
 	return (
 		<>
 			<View style={styles.screen}>
-				<Header/>
+				{/* <Header/> */}
 				<View style={styles.content}>	
 					<View style={styles.asset}>
 						<View style={styles.textContainer} >
@@ -30,7 +28,7 @@ const ItemDetail = ({route}) => {
 							<Text style={{...styles.assetPrice, color: priceColor}}>{`${item.value} ${item.currency}`}</Text>
 							<Text style={{...styles.variation, color: priceColor}}>
 								{
-									`${item.value === item.prev_value ?
+									`${item.prev_value && item.value < item.prev_value ? '-' : ''} ${item.value === item.prev_value ?
 									0 : item.value > item.prev_value ?
 									((item.value / item.prev_value - 1) * 100).toFixed(2)
 									: ((1 - item.value / item.prev_value) * 100).toFixed(2)} %`
@@ -42,7 +40,7 @@ const ItemDetail = ({route}) => {
 						<Chart 
 							asset={item} 
 							historyAvailable={historyAvailable}
-							rawData={data}
+							rawData={item.sparkline}
 						/>
 					</View>					
 				</View>
@@ -60,23 +58,26 @@ const styles = StyleSheet.create({
 		flex: 1,
 		backgroundColor: COLORS.background,
 		paddingTop: 25,	
+		
 	},
 	content: {
 		width: '100%',
 		paddingTop: 25,
 		paddingHorizontal: '5%',
-		justifyContent: 'center',
-		//alignItems: 'center'
+		justifyContent: 'space-evenly',
+		alignItems: 'center'
 	},
 	chartContainer: {
-		marginVertical: 25,
+		marginTop: '10%',
 		
 	},
 	textContainer: {
+		//marginTop: '10%',
 		flexDirection: 'row',
 		alignItems: 'center',	
 	},
 	priceContainer: {
+		//marginTop: '10%',
 		flexDirection: 'column',
 	},
 	asset:{
