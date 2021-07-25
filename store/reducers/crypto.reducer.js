@@ -1,4 +1,3 @@
-import { CRYPTOS } from "../../data/cryptos";
 import { GET_CRYPTO_VALUES_BEGIN, GET_CRYPTO_VALUES_SUCCESS, GET_CRYPTO_VALUES_FAILURE } from "../actions/crypto.action";
 
 const INITIAL_STATE = {
@@ -21,3 +20,5 @@ const CryptoReducer = (state = INITIAL_STATE, action) => {
 };
 
 export default CryptoReducer;
+
+//Combinar los 3 reducers en uno solo, facilita la actualizacion de los items de la watchlist

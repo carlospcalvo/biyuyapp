@@ -3,29 +3,30 @@ import { Modal as RNModal, StyleSheet, Text, ScrollView, View, Dimensions, Secti
 import COLORS from '../../styles/Colors';
 import AssetListItem from '../AssetList/AssetListItem';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { addToWatchlist } from '../../store/actions/watchlist.action';
 
 const ModalAddItem = ({ modalVisible, closeModal, data, watchlist }) => {
 	const dispatch = useDispatch();
-
+	const cryptos = useSelector(state => state.cryptos.items);
+	const rates = useSelector(state => state.rates.items);
 	let watchlistIDs = watchlist.map(asset => asset.id);
-	let [rates, cryptos] = data.map(assetType => assetType.data);
+	let cryptoIds = cryptos.map(crypto => crypto.id);
+	let rateIds = rates.map(rate => rate.id);
 	let assets = rates.concat(cryptos)
 	let unselectedAssets = assets.filter(item => !watchlistIDs.includes(item.id))
-	//console.log(watchlistIDs)
+	
+	//filtra segun el titulo
 	let sections = [
 		{
 			title: 'Tipos de cambio',
-			data: unselectedAssets.filter(item => typeof(item.id) == 'number')
+			data: unselectedAssets.filter(item => rateIds.includes(item.id))
 		},
 		{
 			title: 'Criptomonedas',
-			data: unselectedAssets.filter(item => typeof(item.id) == 'string')
+			data: unselectedAssets.filter(item => cryptoIds.includes(item.id))
 		}
 	].filter(item => item.data.length > 0)
-
-	//console.log(sections)
 
 	return (
 		<RNModal 
@@ -42,7 +43,7 @@ const ModalAddItem = ({ modalVisible, closeModal, data, watchlist }) => {
 						sections={sections}
 						keyExtractor={(item, index) => item + index}
 						renderItem={({ item }) => (
-							<TouchableOpacity onPress={() => dispatch(addToWatchlist(item.id)) && closeModal()}>
+							<TouchableOpacity onPress={() => dispatch(addToWatchlist(item)) && closeModal()}>
 								<AssetListItem item={item} hidePrice />
 							</TouchableOpacity>
 						) }

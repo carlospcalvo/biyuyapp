@@ -7,9 +7,9 @@ export const getWatchlistValues = ids => ({
     assetIDs: ids,
 });
 
-export const addToWatchlist = id => ({
+export const addToWatchlist = asset => ({
     type: ADD_ITEM,
-    assetID: id
+    payload: { asset }
 });
 
 export const removeFromWatchlist = id => ({

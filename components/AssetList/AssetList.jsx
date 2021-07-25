@@ -1,11 +1,11 @@
 import {FlatList, StyleSheet, Text, TouchableHighlight, View} from 'react-native';
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import AssetListItem from './AssetListItem';
 import ModalDeleteItem from '../Modals/ModalDeleteItem';
 import COLORS from '../../styles/Colors'
 import AddItem from '../AddItem';
 
-const AssetList = ({ navigation, data, onDelete }) => {
+const AssetList = ({ navigation, data, onDelete, onRefresh, refreshing}) => {
 	const [itemSelected, setItemSelected] = useState({});
 	const [modalVisible, setModalVisible] = useState(false);
 
@@ -41,6 +41,9 @@ const AssetList = ({ navigation, data, onDelete }) => {
 				)}
 				ListFooterComponent={onDelete ? AddItem : null}
 				keyExtractor={item => item.id.toString()}
+				//refreshControl={refreshControl}
+				refreshing={refreshing}
+				onRefresh={onRefresh}
 			/>
 			{ 
 				onDelete && 

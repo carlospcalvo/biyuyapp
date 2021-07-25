@@ -8,13 +8,8 @@ import * as Font from 'expo-font'
 import COLORS from './styles/Colors'
 import store from './store';
 import { getCrypto } from './store/actions/crypto.action'
+import { getRates } from './store/actions/rate.action'
 
-/* const getFonts = () => Font.loadAsync({
-	'montserrat-regular': require('./assets/fonts/Montserrat-Regular.ttf'),
-	'montserrat-bold': require('./assets/fonts/Montserrat-Bold.ttf'),
-	'montserrat-italic': require('./assets/fonts/Montserrat-Italic.ttf')
-})
- */
 const App = () => {
 	const [fontsLoaded, setFontsLoaded] = useState(false)
 
@@ -27,6 +22,7 @@ const App = () => {
 	  
 	  	// do API calls here
 		await store.dispatch(getCrypto());
+		await store.dispatch(getRates());
 	}
 
 	return (

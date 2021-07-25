@@ -1,25 +1,22 @@
-import { RATES } from "../../data/rates";
-import { GET_VALUE, GET_HISTORICAL_VALUES } from "../actions/rate.action";
+import { GET_EXCHANGE_RATES_BEGIN, GET_EXCHANGE_RATES_SUCCESS, GET_EXCHANGE_RATES_FAILURE } from "../actions/rate.action";
 
 const INITIAL_STATE = {
-    items: RATES,
-    selected: null,
-
+    items: [],
+    loading: false,
+    error: null,
 };
 
-const RateReducer = (state = INITIAL_STATE, action) => {
+const RateReducer = (state = INITIAL_STATE, action) => { 
     switch (action.type) {
-        case GET_VALUE:
-            const categoryIndex = state.rates.findIndex(cat => cat.id === action.categoryID);
-            return categoryIndex === -1 ? { ...state } : { ...state, selected: state.rates[categoryIndex] };
-            break;
-        case GET_HISTORICAL_VALUES:
-
-            break;
+        case GET_EXCHANGE_RATES_BEGIN:
+            return { ...state, loading: true };
+        case GET_EXCHANGE_RATES_SUCCESS:   
+            return { ...state, items: action.payload.rates, loading: false };
+        case GET_EXCHANGE_RATES_FAILURE:
+            return { ...state, error: action.payload.error, loading: false };
         default:
             return { ...state };
-            break;
     }
-};
+}
 
 export default RateReducer;

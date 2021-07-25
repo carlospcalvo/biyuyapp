@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, TouchableOpacity, View, Text} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import ModalAddItem from './Modals/ModaAddlItem';
 import { useSelector } from 'react-redux';
@@ -22,6 +22,12 @@ const AddItem = () => {
 
 	return (
 		<View style={styles.inputContainer}>
+			{
+				watchlist.length === 0 && 
+				<View style={styles.emptyListMessageContainer}>
+					<Text style={styles.emptyListMessage}>Aún no agregaste nada a tu watchlist!</Text>
+				</View>
+			}
 			<TouchableOpacity style={{...styles.button, ...styles.addButton}} onPress={() => handleModalOpen()}>
 				<Ionicons name="add-circle-outline" size={48} color={COLORS.auxiliary} />
 			</TouchableOpacity> 
@@ -54,6 +60,14 @@ const styles = StyleSheet.create({
 		padding: 0
 		//width: 90,
 	},
+	emptyListMessageContainer: {
+		marginBottom: '5%',
+
+	},
+	emptyListMessage: {
+		color: COLORS.mainFont,
+		fontFamily: 'montserrat-regular'
+	},	
 });
 
 

@@ -1,19 +1,21 @@
 import React, { useState, useCallback } from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View, ActivityIndicator } from 'react-native'
 import { StatusBar } from 'expo-status-bar'
 import AssetList from '../components/AssetList/AssetList'
 import COLORS from '../styles/Colors'
 import { useNavigation } from '@react-navigation/native'
 import { useSelector, useDispatch, connect } from 'react-redux';
-//import { useFocusEffect } from '@react-navigation/core';
+import { useFocusEffect } from '@react-navigation/core';
+import { getRates } from '../store/actions/rate.action';
 
-const RatesListScreen = () => {
-	const prices = useSelector(state => state.rates.items);
+const RatesListScreen = ( { getRates } ) => {
+	const { items: rates, loading, error} = useSelector(state => state.rates);
+	//const loading = useSelector(state => state.rates.loading);
 	const navigation = useNavigation();
-	
-/* 	useFocusEffect(
+
+	/* useFocusEffect(
 		useCallback(() => {
-			if (assetType === 'Crypto') getCrypto();
+			getRates();
 		}, [])
 	); */
 
@@ -23,7 +25,21 @@ const RatesListScreen = () => {
 				<View style={styles.titleContainer}>
 					<Text style={styles.title}>Tipos de Cambio</Text>
 				</View>
-				<AssetList data={prices} navigation={navigation}/>
+				{
+					loading &&  
+					<View style={{flex: 1, alignContent: 'center', justifyContent: 'center'}}>
+						<ActivityIndicator color={"#fff"}/>
+					</View>
+				}
+				{
+					!loading && rates &&
+					<AssetList 
+						data={rates} 
+						navigation={navigation} 
+						refreshing={loading} 
+						onRefresh={getRates}
+					/>	
+				}
 			</View>
 			<StatusBar style="light"/>		
 		</>
@@ -47,7 +63,7 @@ const styles = StyleSheet.create({
 		fontSize: 20
 	}
 })
-/* >>> TODO <<<
+
 const mapStateToProps = state => ({
 	items: state.items,
 	loading: state.loading,
@@ -55,8 +71,8 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-	getCrypto: () => dispatch(getCrypto())
-}) */
+	getRates: () => dispatch(getRates())
+})
 
-//export default connect(mapStateToProps, mapDispatchToProps)(PriceListScreen);
-export default RatesListScreen;
+export default connect(mapStateToProps, mapDispatchToProps)(RatesListScreen);
+//export default RatesListScreen;

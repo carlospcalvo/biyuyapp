@@ -9,6 +9,7 @@ module.exports = function(api) {
 			extensions: ['.tsx', '.ts', '.js', '.json'],
 		  }
 		],
+		'inline-dotenv',
 		'react-native-reanimated/plugin' // KEEP IT HERE
 	  ]
   };

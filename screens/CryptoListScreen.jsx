@@ -11,15 +11,16 @@ import { useFocusEffect } from '@react-navigation/core';
 import { getCrypto } from '../store/actions/crypto.action';
 
 const CryptoListScreen = ({ getCrypto }) => {
-	const prices = useSelector(state => state.cryptos.items)
-	const loading = useSelector(state => state.cryptos.loading)
+	const { items: prices, loading, error} = useSelector(state => state.cryptos)
+	//const loading = useSelector(state => state.cryptos.loading)
 	const navigation = useNavigation();
+	//const [refreshing, setRefreshing] = useState(false);
 
-	useFocusEffect(
+	/* useFocusEffect(
 		useCallback(() => {
 			getCrypto();
 		}, [])
-	);
+	); */
 
 	return (
 		<>
@@ -35,7 +36,12 @@ const CryptoListScreen = ({ getCrypto }) => {
 				}
 				{
 					!loading && prices &&
-					<AssetList data={prices} navigation={navigation}/>	
+					<AssetList 
+						data={prices} 
+						navigation={navigation} 
+						refreshing={loading} 
+						onRefresh={getCrypto}
+					/>	
 				}			
 			</View>
 			<StatusBar style="light"/>		

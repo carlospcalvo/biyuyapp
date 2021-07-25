@@ -1,22 +1,32 @@
-import React, {useState} from 'react'
-import { View, StyleSheet, TouchableWithoutFeedback, Keyboard, Text } from 'react-native'
+import React, { useState, useCallback } from 'react'
+import { View, StyleSheet, TouchableWithoutFeedback, Keyboard, Text, RefreshControl } from 'react-native'
 import { StatusBar } from 'expo-status-bar'
-import Header from '../components/Header'
-import AddItem from '../components/AddItem'
 import AssetList from '../components/AssetList/AssetList'
 import COLORS from '../styles/Colors'
 import { useNavigation } from '@react-navigation/core';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch, connect } from 'react-redux';
 import { removeFromWatchlist } from '../store/actions/watchlist.action'
+import { getCrypto } from '../store/actions/crypto.action'
+import { getRates } from '../store/actions/rate.action'
  
-//{ watchlist, currencies, cryptos }
 const MainScreen = () => {
+	const [refreshing, setRefreshing] = useState(false);
 	const watchlist = useSelector(state => state.watchlist.items);
+	//const cryptos = useSelector(state => state.cryptos.items);
+	//const rates = useSelector(state => state.rates.items);
 	const dispatch = useDispatch();
 	const navigation = useNavigation();
 
+	//handlers
+
 	const handleDelete = selected => dispatch(removeFromWatchlist(selected.id));
 
+	const handleRefresh = () => {
+		setRefreshing(true);
+		dispatch(getCrypto());
+		dispatch(getRates());
+		setRefreshing(false);
+	}
 
 	return (
 		<>
@@ -25,12 +35,18 @@ const MainScreen = () => {
 					<View style={styles.titleContainer}>
 						<Text style={styles.title}>Tu watchlist</Text>
 					</View>
-					<AssetList data={watchlist} onDelete={handleDelete} navigation={navigation}/>
+					<AssetList 
+						data={watchlist} 
+						onDelete={handleDelete} 
+						navigation={navigation} 
+						refreshing={refreshing}
+						onRefresh={handleRefresh}
+					/>
 				</View>
 			</TouchableWithoutFeedback>
 			<StatusBar style="light"/>		
 		</>
-)	
+	)	
 }
 
 const styles = StyleSheet.create({
@@ -52,4 +68,14 @@ const styles = StyleSheet.create({
 
 })
 
-export default MainScreen;
+const mapStateToProps = state => ({
+	items: state.items,
+	//loading: state.loading,
+	//error: state.error
+})
+
+const mapDispatchToProps = dispatch => ({
+	//getRates: () => dispatch(getRates())
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(MainScreen);
