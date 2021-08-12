@@ -4,9 +4,9 @@
     "slug": "biyuyapp",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/biyuyapp_icon.png",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/biyuyapp_logo.png",
       "resizeMode": "contain",
       "backgroundColor": "#12263A"
     },

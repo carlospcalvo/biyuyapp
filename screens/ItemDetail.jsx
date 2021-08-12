@@ -1,18 +1,38 @@
-import React from 'react';
-import { StyleSheet, Text, View, Dimensions, ScrollView } from 'react-native';
+import React, { useLayoutEffect, useState } from 'react';
+import { StyleSheet, Text, View, Dimensions, ActivityIndicator } from 'react-native';
 import { StatusBar } from 'expo-status-bar'
 import COLORS from '../styles/Colors';
 import Chart from '../components/Chart';
+import axios from 'axios';
 
 const ItemDetail = ({route}) => {
 	const { item } = route.params
-	//const { getCurrenciesHistValues, getCryptoHistValues } = useDataContext();
+	const [data, setData] = useState([0]);
+	const [loading, setLoading] = useState(false);
+	const [error, setError] = useState();
 	let historyAvailable = true && item.sparkline?.length > 0;
-	//console.log(item.sparkline)
-	//if(historyAvailable) data = item.id < 100 ? getCurrenciesHistValues(item.tag) : getCryptoHistValues(item.name.toLowerCase());
-
 	let priceColor = item.prev_value != item.value ? item.prev_value > item.value ? 'red' : '#13ba15' : 'lightgrey';
 
+	const getHistoricalValues = async id => {
+		try {
+			let response = await axios(`https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=usd&days=30&interval=daily`);
+			let prices = response.data.prices.map(item => item[1]);
+			return prices;	
+		} catch (error) {
+			setError(error.message);
+			return;
+		}
+	}
+
+	useLayoutEffect(() => {
+		setLoading(true);
+		if (item.currency === 'USD') { 
+			getHistoricalValues(item.id).then(values => setData(values));
+		} else {
+			setData(item.sparkline);
+		}
+		setLoading(false);
+	}, [item]);
 
 	return (
 		<>
@@ -37,11 +57,17 @@ const ItemDetail = ({route}) => {
 						</View>					
 					</View>	
 					<View style={styles.chartContainer}>
-						<Chart 
-							asset={item} 
-							historyAvailable={historyAvailable}
-							rawData={item.sparkline}
-						/>
+						{
+							loading 
+							? <ActivityIndicator size="large" color={COLORS.secondary} />
+							: !error
+							? <Chart 
+									asset={item} 
+									historyAvailable={historyAvailable}
+									rawData={data}
+								/>
+							: <Text style={styles.errorText} numberOfLines={2}>Hubo un error al obtener los datos, intenta nuevamente</Text> 
+						}
 					</View>					
 				</View>
 				
@@ -50,6 +76,11 @@ const ItemDetail = ({route}) => {
 		</>
 	);
 };
+
+/**
+ 
+ */
+
 
 const { width, height } = Dimensions.get('screen')
 
@@ -109,6 +140,10 @@ const styles = StyleSheet.create({
 		fontFamily: 'montserrat-regular',
 		textAlign: 'center'
 	},	
+	errorText: {
+		color: 'red',
+
+	}
 });
 
 export default ItemDetail;

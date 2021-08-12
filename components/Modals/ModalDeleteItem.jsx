@@ -9,7 +9,7 @@ const ModalDeleteItem = ({modalVisible, closeModal, itemSelected, onDelete}) => 
 				<View style={styles.container}>
 					<Text style={styles.message}>Estás seguro que deseas quitar {itemSelected.name} de tu lista?</Text>
 					<View style={styles.buttonContainer}>
-						<TouchableHighlight style={{...styles.button, ...styles.cancelButton}} onPress={() => closeModal}>
+						<TouchableHighlight style={{...styles.button, ...styles.cancelButton}} onPress={() => closeModal()}>
 							<Text style={styles.buttonText}> Cancelar </Text>
 						</TouchableHighlight>
 						<TouchableHighlight style={{...styles.button, ...styles.confirmButton}} onPress={onDelete}>
