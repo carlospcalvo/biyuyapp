@@ -5,10 +5,9 @@ import AppLoading from 'expo-app-loading'
 import { NavigationContainer } from '@react-navigation/native'
 import TabNavigator from './navigation/TabNavigator'
 import * as Font from 'expo-font'
-import COLORS from './styles/Colors'
 import store from './store';
-import { getCrypto } from './store/actions/crypto.action'
-import { getRates } from './store/actions/rate.action'
+import COLORS from './styles/Colors';
+import { getCrypto, getRates } from './store/actions';
 
 const App = () => {
 	const [fontsLoaded, setFontsLoaded] = useState(false)
@@ -41,8 +40,8 @@ const App = () => {
 			onFinish={ () => setFontsLoaded(true) }
 			onError={ err => console.log(err) }
 		/>
-	)
+	);
 }
 
-export default App
+export default App;
 

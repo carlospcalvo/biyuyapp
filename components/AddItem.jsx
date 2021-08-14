@@ -1,24 +1,19 @@
 import React, {useState} from 'react';
 import {StyleSheet, TouchableOpacity, View, Text} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import ModalAddItem from './Modals/ModaAddlItem';
+import ModalAddItem from './Modals/ModalAddlItem';
 import { useSelector } from 'react-redux';
 import COLORS from '../styles/Colors';
 
 const AddItem = () => {
 	const [modalVisible, setModalVisible] = useState(false);
-	const watchlist = useSelector(state => state.watchlist.items);
-	const cryptos = useSelector(state => state.cryptos.items);
-	const rates = useSelector(state => state.rates.items);
+	const watchlist = useSelector(state => state.watchlist);
+	const cryptos = useSelector(state => state.cryptos);
+	const rates = useSelector(state => state.rates);
 	
 	const handleModalClose = () => setModalVisible(false);
 
 	const handleModalOpen = () => setModalVisible(true);
-
-	let data = [
-		{ title: "Tipos de cambio", data: rates },
-		{ title: "Criptomonedas", data: cryptos }
-	]
 
 	return (
 		<View style={styles.inputContainer}>
@@ -34,7 +29,6 @@ const AddItem = () => {
 			<ModalAddItem 
 				modalVisible={modalVisible} 
 				closeModal={handleModalClose} 
-				data={data}
 				watchlist={watchlist}
 			/>
 		</View>

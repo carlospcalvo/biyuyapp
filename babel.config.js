@@ -9,7 +9,17 @@ module.exports = function(api) {
 			extensions: ['.tsx', '.ts', '.js', '.json'],
 		  }
 		],
-		'inline-dotenv',
+		[
+			"module:react-native-dotenv", 
+			{
+				"moduleName": "@env",
+				"path": ".env",
+				"blacklist": null,
+				"whitelist": null,
+				"safe": false,
+				"allowUndefined": true
+			}
+		],
 		'react-native-reanimated/plugin' // KEEP IT HERE
 	  ]
   };

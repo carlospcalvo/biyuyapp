@@ -1,32 +1,23 @@
 import React, { useState, useCallback } from 'react'
 import { View, StyleSheet, TouchableWithoutFeedback, Keyboard, Text, RefreshControl } from 'react-native'
 import { StatusBar } from 'expo-status-bar'
+import { useNavigation } from '@react-navigation/core';
+import { useDispatch, connect } from 'react-redux';
 import AssetList from '../components/AssetList/AssetList'
 import COLORS from '../styles/Colors'
-import { useNavigation } from '@react-navigation/core';
-import { useSelector, useDispatch, connect } from 'react-redux';
-import { removeFromWatchlist } from '../store/actions/watchlist.action'
-import { getCrypto } from '../store/actions/crypto.action'
-import { getRates } from '../store/actions/rate.action'
+import { getCrypto, getRates, removeFromWatchlist } from '../store/actions'
  
-const MainScreen = () => {
-	const [refreshing, setRefreshing] = useState(false);
-	const watchlist = useSelector(state => state.watchlist.items);
-	//const cryptos = useSelector(state => state.cryptos.items);
-	//const rates = useSelector(state => state.rates.items);
+const MainScreen = ({ watchlist, loading, getCrypto, getRates }) => {
 	const dispatch = useDispatch();
 	const navigation = useNavigation();
 
 	//handlers
-
-	const handleDelete = selected => dispatch(removeFromWatchlist(selected.id));
+	const handleDelete = id => dispatch(removeFromWatchlist(id));
 
 	const handleRefresh = () => {
-		setRefreshing(true);
-		dispatch(getCrypto());
-		dispatch(getRates());
-		setRefreshing(false);
-	}
+		getCrypto();
+		getRates();
+	} 
 
 	return (
 		<>
@@ -39,7 +30,7 @@ const MainScreen = () => {
 						data={watchlist} 
 						onDelete={handleDelete} 
 						navigation={navigation} 
-						refreshing={refreshing}
+						refreshing={loading}
 						onRefresh={handleRefresh}
 					/>
 				</View>
@@ -68,14 +59,18 @@ const styles = StyleSheet.create({
 
 })
 
-const mapStateToProps = state => ({
-	items: state.items,
-	//loading: state.loading,
-	//error: state.error
-})
+const mapStateToProps = state => {
+	let crypto = state.cryptos.filter(item => state.watchlist.includes(item.id));
+	let rates = state.rates.filter(item => state.watchlist.includes(item.id));
+	return {
+		watchlist: rates.concat(crypto),
+		loading: state.loading
+	}
+}
 
 const mapDispatchToProps = dispatch => ({
-	//getRates: () => dispatch(getRates())
+	getRates: () => dispatch(getRates()),
+	getCrypto: () => dispatch(getCrypto())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(MainScreen);

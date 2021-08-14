@@ -4,17 +4,16 @@ import COLORS from '../../styles/Colors'
 
 const AssetListItem = ({ item, hidePrice = false }) => {
 	let priceColor = item.prev_value != item.value ? item.prev_value > item.value ? 'red' : '#13ba15' : 'lightgrey';
-	
 	return (
 		item &&
 		<View style={styles.listItem}>
 			<View style={styles.asset}>
-				<View style={styles.textContainer} >
+				<View style={styles.textContainer}>
 					<Text style={styles.assetName}>{item.name}</Text>
 					{ item.ticker && <Text style={styles.assetTicker}>{item.ticker}</Text> }
 				</View>
 				{
-					!hidePrice && item.value &&
+					!hidePrice && item.value > 0 &&
 					<View style={styles.priceContainer}>
 						<Text style={{...styles.assetPrice, color: priceColor}}>{`${item.value} ${item.currency}`}</Text>
 					</View>	

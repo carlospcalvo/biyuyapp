@@ -1,20 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { Modal as RNModal, StyleSheet, Text, ScrollView, View, Dimensions, SectionList, TouchableOpacity } from 'react-native';
+import { Modal as RNModal, StyleSheet, Text, ScrollView, View, Dimensions, SectionList, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
 import COLORS from '../../styles/Colors';
 import AssetListItem from '../AssetList/AssetListItem';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useSelector, useDispatch } from 'react-redux';
-import { addToWatchlist } from '../../store/actions/watchlist.action';
+import { addToWatchlist } from '../../store/actions';
 
-const ModalAddItem = ({ modalVisible, closeModal, data, watchlist }) => {
+const ModalAddItem = ({ modalVisible, closeModal, watchlist }) => {
 	const dispatch = useDispatch();
-	const cryptos = useSelector(state => state.cryptos.items);
-	const rates = useSelector(state => state.rates.items);
-	let watchlistIDs = watchlist.map(asset => asset.id);
+	const cryptos = useSelector(state => state.cryptos);
+	const rates = useSelector(state => state.rates);
+
+	//let watchlistIDs = watchlist.map(asset => asset.id);
 	let cryptoIds = cryptos.map(crypto => crypto.id);
 	let rateIds = rates.map(rate => rate.id);
 	let assets = rates.concat(cryptos)
-	let unselectedAssets = assets.filter(item => !watchlistIDs.includes(item.id))
+	let unselectedAssets = assets.filter(item => !watchlist.includes(item.id))
 	
 	//filtra segun el titulo
 	let sections = [
@@ -33,29 +34,34 @@ const ModalAddItem = ({ modalVisible, closeModal, data, watchlist }) => {
 			animationType='fade' 
 			visible={modalVisible} 
 			transparent
+			
 		>
-			<View style={styles.screen}>
-				<View style={styles.container}>
-					<TouchableOpacity style={styles.closeButton} onPress={() => closeModal()}>
-						<MaterialCommunityIcons name="close" size={24} color={COLORS.secondary} />
-					</TouchableOpacity>
-					<SectionList
-						sections={sections}
-						keyExtractor={(item, index) => item + index}
-						renderItem={({ item }) => (
-							<TouchableOpacity onPress={() => dispatch(addToWatchlist(item)) && closeModal()}>
-								<AssetListItem item={item} hidePrice />
-							</TouchableOpacity>
-						) }
-						renderSectionHeader={({ section: { title } }) => (
-							<View style={styles.headerContainer}>
-								<Text style={styles.header}>{title}</Text>
-							</View>							
-						)}
-						style={styles.sectionList}
-					/>
-				</View>
-			</View>						
+			{/* SI NO ANDA AL QUERER AGREGAR PROBAR DE QUITAR EL TOUCHABLEWITHOUTFEEDBACK */}
+			<TouchableWithoutFeedback onPress={() => closeModal()}>
+				<View style={styles.screen}>
+					<View style={styles.container}>
+						<TouchableOpacity style={styles.closeButton} onPress={() => closeModal()}>
+							<MaterialCommunityIcons name="close" size={24} color={COLORS.secondary} />
+						</TouchableOpacity>
+						<SectionList
+							sections={sections}
+							keyExtractor={(item, index) => item + index}
+							renderItem={({ item }) => (
+								<TouchableOpacity onPress={() => dispatch(addToWatchlist(item.id)) && closeModal()}>
+									<AssetListItem item={item} hidePrice />
+								</TouchableOpacity>
+							) }
+							renderSectionHeader={({ section: { title } }) => (
+								<View style={styles.headerContainer}>
+									<Text style={styles.header}>{title}</Text>
+								</View>							
+							)}
+							style={styles.sectionList}
+						/>
+					</View>
+				</View>			
+			</TouchableWithoutFeedback>
+						
 		</RNModal>
 	);
 };

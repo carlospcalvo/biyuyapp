@@ -10,7 +10,7 @@ const AssetList = ({ navigation, data, onDelete, onRefresh, refreshing}) => {
 	const [modalVisible, setModalVisible] = useState(false);
 
 	const handleConfirmDelete = () => {
-		onDelete(itemSelected);
+		onDelete(itemSelected.id);
 		setModalVisible(false);
 		setItemSelected({});
 	};

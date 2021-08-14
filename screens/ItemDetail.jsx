@@ -1,9 +1,10 @@
 import React, { useLayoutEffect, useState } from 'react';
 import { StyleSheet, Text, View, Dimensions, ActivityIndicator } from 'react-native';
-import { StatusBar } from 'expo-status-bar'
-import COLORS from '../styles/Colors';
-import Chart from '../components/Chart';
+import { StatusBar } from 'expo-status-bar';
+import { RATES_API_URL, RATES_API_TOKEN } from '@env';
 import axios from 'axios';
+import Chart from '../components/Chart';
+import COLORS from '../styles/Colors';
 
 const ItemDetail = ({route}) => {
 	const { item } = route.params
@@ -13,12 +14,26 @@ const ItemDetail = ({route}) => {
 	let historyAvailable = true && item.sparkline?.length > 0;
 	let priceColor = item.prev_value != item.value ? item.prev_value > item.value ? 'red' : '#13ba15' : 'lightgrey';
 
-	const getHistoricalValues = async id => {
+	const getHistoricalValues = async asset => {
 		try {
-			let response = await axios(`https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=usd&days=30&interval=daily`);
-			let prices = response.data.prices.map(item => item[1]);
+			let response;
+			let prices;
+			if (item.currency === 'USD'){
+				response = await axios(`https://api.coingecko.com/api/v3/coins/${asset.id}/market_chart?vs_currency=usd&days=30&interval=daily`);
+				prices = response.data.prices.map(item => item[1]);
+			} else {
+				response = await axios({
+					url: `${RATES_API_URL}/historico/${item.id}`,
+					method: 'GET',
+					headers: {
+						Authorization: `bearer ${RATES_API_TOKEN}`
+					}
+				});
+				prices = response.data.map(item => item.value);
+			}
 			return prices;	
 		} catch (error) {
+			console.log(error.message);
 			setError(error.message);
 			return;
 		}
@@ -26,11 +41,7 @@ const ItemDetail = ({route}) => {
 
 	useLayoutEffect(() => {
 		setLoading(true);
-		if (item.currency === 'USD') { 
-			getHistoricalValues(item.id).then(values => setData(values));
-		} else {
-			setData(item.sparkline);
-		}
+		getHistoricalValues(item).then(values => setData(values));
 		setLoading(false);
 	}, [item]);
 
@@ -142,7 +153,7 @@ const styles = StyleSheet.create({
 	},	
 	errorText: {
 		color: 'red',
-
+		textAlign: 'center'
 	}
 });
 

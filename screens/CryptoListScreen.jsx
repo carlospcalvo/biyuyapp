@@ -1,26 +1,14 @@
-import React, { useState, useCallback } from 'react'
+import React from 'react'
 import { StyleSheet, Text, View, ActivityIndicator } from 'react-native'
 import { StatusBar } from 'expo-status-bar'
-import Header from '../components/Header'
 import AssetList from '../components/AssetList/AssetList'
-import { useDataContext } from '../context/DataContext'
 import COLORS from '../styles/Colors'
 import { useNavigation } from '@react-navigation/native'
-import { useSelector, useDispatch, connect } from 'react-redux';
-import { useFocusEffect } from '@react-navigation/core';
-import { getCrypto } from '../store/actions/crypto.action';
+import { connect } from 'react-redux';
+import { getCrypto } from '../store/actions';
 
-const CryptoListScreen = ({ getCrypto }) => {
-	const { items: prices, loading, error} = useSelector(state => state.cryptos)
-	//const loading = useSelector(state => state.cryptos.loading)
+const CryptoListScreen = ({ prices, loading, error, getCrypto }) => {
 	const navigation = useNavigation();
-	//const [refreshing, setRefreshing] = useState(false);
-
-	/* useFocusEffect(
-		useCallback(() => {
-			getCrypto();
-		}, [])
-	); */
 
 	return (
 		<>
@@ -68,7 +56,7 @@ const styles = StyleSheet.create({
 })
 
 const mapStateToProps = state => ({
-	items: state.items,
+	prices: state.cryptos,
 	loading: state.loading,
 	error: state.error
 })

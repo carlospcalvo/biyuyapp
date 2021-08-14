@@ -1,20 +1,16 @@
 import React from 'react';
 import {Dimensions, View, Text, StyleSheet} from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
-import { useDataContext } from '../context/DataContext';
 import COLORS from '../styles/Colors';
 
 const screenWidth = Dimensions.get("window").width;
 
 const Chart = ({ asset, historyAvailable, rawData = [] })=> {
-
-	let labels = [0, 6, 13, 20, 27];
 	let data = {
-		//labels: rawData.map((item, i) => labels.includes(i) ? item.date.slice(0, -5) : ''),
 		datasets: [
 			{
-				data: asset.hasOwnProperty('tag') ? rawData.map(item => item.value) : rawData,
-				//color: (opacity = 1) => rawData[rawData.length-1].value > asset.value ? 'red' : '#13ba15', // optional
+				data: rawData,
+				color: (opacity = 1) => asset.prev_value > asset.value ? 'red' : '#13ba15', // optional
 				strokeWidth: 2 // optional
 			}
 		],
@@ -38,7 +34,7 @@ const Chart = ({ asset, historyAvailable, rawData = [] })=> {
 				historyAvailable ?				
 				<LineChart
 					data={data}
-					width={Dimensions.get('window').width * 0.9}
+					width={screenWidth * 0.9}
 					height={256}
 					verticalLabelRotation={0}
 					chartConfig={chartConfig}
@@ -46,7 +42,6 @@ const Chart = ({ asset, historyAvailable, rawData = [] })=> {
 					transparent
 					withVerticalLines={false}
 					withHorizontalLines
-					//withInnerLines={false}
 					withDots={false}
 					style={{borderRadius: 10, color: 'lightgreen'}}
 					onDataPointClick={(value, dataset, getColor) => console.log(value)}

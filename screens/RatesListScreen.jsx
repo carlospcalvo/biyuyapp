@@ -1,23 +1,14 @@
-import React, { useState, useCallback } from 'react'
-import { StyleSheet, Text, View, ActivityIndicator } from 'react-native'
-import { StatusBar } from 'expo-status-bar'
-import AssetList from '../components/AssetList/AssetList'
-import COLORS from '../styles/Colors'
-import { useNavigation } from '@react-navigation/native'
-import { useSelector, useDispatch, connect } from 'react-redux';
-import { useFocusEffect } from '@react-navigation/core';
-import { getRates } from '../store/actions/rate.action';
+import React from 'react';
+import { StyleSheet, Text, View, ActivityIndicator } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
+import { useNavigation } from '@react-navigation/native';
+import { connect } from 'react-redux';
+import AssetList from '../components/AssetList/AssetList';
+import COLORS from '../styles/Colors';
+import { getRates } from '../store/actions';
 
-const RatesListScreen = ( { getRates } ) => {
-	const { items: rates, loading, error} = useSelector(state => state.rates);
-	//const loading = useSelector(state => state.rates.loading);
+const RatesListScreen = ( { rates, loading, error, getRates } ) => {
 	const navigation = useNavigation();
-
-	/* useFocusEffect(
-		useCallback(() => {
-			getRates();
-		}, [])
-	); */
 
 	return (
 		<>
@@ -65,7 +56,7 @@ const styles = StyleSheet.create({
 })
 
 const mapStateToProps = state => ({
-	items: state.items,
+	rates: state.rates,
 	loading: state.loading,
 	error: state.error
 })
@@ -75,4 +66,3 @@ const mapDispatchToProps = dispatch => ({
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(RatesListScreen);
-//export default RatesListScreen;

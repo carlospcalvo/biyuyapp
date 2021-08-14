@@ -1,18 +1,14 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { useDataContext } from '../context/DataContext';
 import ItemDetail from '../screens/ItemDetail';
 import MainScreen from '../screens/MainScreen';
 import CryptoListScreen from '../screens/CryptoListScreen';
 import RatesListScreen from '../screens/RatesListScreen';
-import Header from '../components/Header';
 import COLORS from '../styles/Colors';
 
 const Stack = createStackNavigator();
 
 const HomeStackNavigator = () => {
-	//const {watchlist, currencies, cryptos} = useDataContext();
 	return (
 		<Stack.Navigator mode='modal' /* screenOptions={{
 			headerTitle: () => <Header/>
@@ -55,8 +51,6 @@ const HomeStackNavigator = () => {
 };
 
 const CurrenciesStackNavigator = () => {
-	const { currencies } = useDataContext();
-
 	return (
 		<Stack.Navigator mode='modal' /* screenOptions={{
 			headerShown: false
@@ -100,8 +94,6 @@ const CurrenciesStackNavigator = () => {
 };
 
 const CryptoStackNavigator = () => {
-	//const { cryptos } = useDataContext();
-
 	return (
 		<Stack.Navigator mode='modal'>
 			<Stack.Screen 

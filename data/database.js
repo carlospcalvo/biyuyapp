@@ -1,1 +1,0 @@
-export const URL_API = 'https://biyuyapp-default-rtdb.firebaseio.com/';
