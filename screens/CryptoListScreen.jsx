@@ -1,14 +1,36 @@
-import React from 'react'
-import { StyleSheet, Text, View, ActivityIndicator } from 'react-native'
-import { StatusBar } from 'expo-status-bar'
-import AssetList from '../components/AssetList/AssetList'
-import COLORS from '../styles/Colors'
-import { useNavigation } from '@react-navigation/native'
-import { connect } from 'react-redux';
-import { getCrypto } from '../store/actions';
+import React from 'react';
+import { StyleSheet, Text, View, ActivityIndicator, Alert } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
+import AssetList from '../components/AssetList/AssetList';
+import { useNavigation } from '@react-navigation/native';
+import { connect, useDispatch } from 'react-redux';
+import { addToWatchlist, getCrypto } from '../store/actions';
+import COLORS from '../styles/Colors';
 
-const CryptoListScreen = ({ prices, loading, error, getCrypto }) => {
+const CryptoListScreen = ({ prices, loading, error, watchlist, getCrypto }) => {
+	const dispatch = useDispatch();
 	const navigation = useNavigation();
+
+	const handleAddToWatchlist = id => {
+		if(!watchlist.includes(id)){
+			dispatch(addToWatchlist(id));
+			Alert.alert(
+				"Criptomoneda agregada!",
+				`Se ha agregado ${prices.find(item => item.id === id).name} a tu watchlist`,
+				[
+					{ text: "OK" }
+				]
+			);
+		} else {
+			Alert.alert(
+				"Error",
+				`${prices.find(item => item.id === id).name} ya está en tu watchlist!`,
+				[
+					{ text: "OK" }
+				]
+			);
+		}  
+	}
 
 	return (
 		<>
@@ -29,6 +51,7 @@ const CryptoListScreen = ({ prices, loading, error, getCrypto }) => {
 						navigation={navigation} 
 						refreshing={loading} 
 						onRefresh={getCrypto}
+						onAdd={handleAddToWatchlist}
 					/>	
 				}			
 			</View>
@@ -58,7 +81,8 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => ({
 	prices: state.cryptos,
 	loading: state.loading,
-	error: state.error
+	error: state.error,
+	watchlist: state.watchlist
 })
 
 const mapDispatchToProps = dispatch => ({

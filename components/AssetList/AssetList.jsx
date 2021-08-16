@@ -1,26 +1,69 @@
-import {FlatList, StyleSheet, Text, TouchableHighlight, View} from 'react-native';
-import React, {useState, useEffect} from 'react';
+import React from 'react';
+import {FlatList, StyleSheet, TouchableHighlight, Animated } from 'react-native';
+import { Swipeable } from 'react-native-gesture-handler';
+import { Ionicons } from '@expo/vector-icons';
 import AssetListItem from './AssetListItem';
-import ModalDeleteItem from '../Modals/ModalDeleteItem';
-import COLORS from '../../styles/Colors'
 import AddItem from '../AddItem';
+import COLORS from '../../styles/Colors'
 
-const AssetList = ({ navigation, data, onDelete, onRefresh, refreshing}) => {
-	const [itemSelected, setItemSelected] = useState({});
-	const [modalVisible, setModalVisible] = useState(false);
+const AssetList = ({ navigation, data, onDelete, onAdd, onRefresh, refreshing}) => {
+	const RenderRight = ({ progress, dragX, item, onPress}) => {
+        const scale = dragX.interpolate({
+            inputRange: [-100, 0],
+            outputRange: [1, 0],
+            extrapolate: 'clamp'
+        });
+		
+		const slideButtonStyle = { 
+			transform: [ { scale } ],
+			backgroundColor: onDelete ? "#A50104" : COLORS.pressed
+		}
 
-	const handleConfirmDelete = () => {
-		onDelete(itemSelected.id);
-		setModalVisible(false);
-		setItemSelected({});
-	};
+		let buttonHeight = item.ticker ? 61 : 51;
 
-	const handleModalOpen = id => {
-		setItemSelected(data.find(item => item.id === id));
-		setModalVisible(true);
-	};
+        return onDelete ? (			
+			<TouchableHighlight onPress={() => onPress(item.id)}>
+				<Animated.View style={{...styles.rowBack, backgroundColor: "#A50104", height: buttonHeight}}>
+					<Animated.View style={slideButtonStyle}>
+						<Ionicons name="trash-bin-outline" size={50} color="white" />
+					</Animated.View>	
+				</Animated.View>
+			</TouchableHighlight>
+		)
+		: (
+			<TouchableHighlight onPress={() => onPress(item.id)}>
+				<Animated.View style={{...styles.rowBack, height: buttonHeight}}>
+					<Animated.View style={slideButtonStyle}>
+						<Ionicons name="add" size={50} color='#13ba15' /> 
+					</Animated.View>	
+				</Animated.View>
+			</TouchableHighlight>
+		);
+    }
 
-	const handleModalClose = () => setModalVisible(false);
+	const RenderItem = ({ item, onRightPress }) => (
+		<Swipeable
+			useNativeAnimations 
+			overshootRight={false} 
+			renderRightActions={( progress, dragX ) => (
+				<RenderRight 
+					progress={progress} 
+					dragX={dragX} 
+					item={item} 
+					onPress={onRightPress}
+				/>
+			)}
+		>
+			<TouchableHighlight
+				style={{width: '100%'}} 
+				onPress={() => navigation ? navigation?.navigate('Detail', {item}) : null}
+				activeOpacity={0.5}
+				underlayColor={COLORS.pressed}
+			>
+				<AssetListItem item={item}/>
+			</TouchableHighlight>
+		</Swipeable>
+	);
 
 	return (
 		<>
@@ -29,31 +72,13 @@ const AssetList = ({ navigation, data, onDelete, onRefresh, refreshing}) => {
 				data={data}
 				extraData={data}
 				renderItem={({ item }) => (
-					<TouchableHighlight
-						style={{width: '100%'}} 
-						onPress={() => navigation ? navigation?.navigate('Detail', {item}) : null}
-						onLongPress={() => handleModalOpen(item.id)}
-						activeOpacity={0.5}
-						underlayColor={COLORS.pressed}
-					>
-						<AssetListItem item={item} handleModal={handleModalOpen}/>
-					</TouchableHighlight>
+					<RenderItem item={item} onRightPress={onDelete || onAdd}/>
 				)}
 				ListFooterComponent={onDelete ? AddItem : null}
 				keyExtractor={item => item.id.toString()}
-				//refreshControl={refreshControl}
 				refreshing={refreshing}
 				onRefresh={onRefresh}
 			/>
-			{ 
-				onDelete && 
-				<ModalDeleteItem 
-					modalVisible={modalVisible} 
-					closeModal={handleModalClose} 
-					itemSelected={itemSelected} 
-					onDelete={handleConfirmDelete} 
-				/> 
-			}
 		</>
 	);
 }
@@ -62,11 +87,17 @@ const styles = StyleSheet.create({
 	listContainer: {
 		width: '100%',
 		marginTop: 20,
-		/* padding: 5, */
-		backgroundColor: COLORS.background, //'#242526',
-		/* borderColor: Colors.auxiliary,
-		borderRadius: 20,
-		borderWidth: 1, */
+		backgroundColor: COLORS.background, 
+	},
+	rowBack: {
+		backgroundColor: COLORS.pressed,
+		justifyContent: 'center',
+		alignItems: 'center',
+		height: 51,
+		borderBottomColor: COLORS.auxiliary,
+		borderBottomWidth: 1, 
+		borderTopColor: COLORS.background,
+		borderTopWidth: 1,
 	},
 });
 

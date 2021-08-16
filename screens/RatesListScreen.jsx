@@ -1,14 +1,36 @@
 import React from 'react';
-import { StyleSheet, Text, View, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, ActivityIndicator, Alert } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { useNavigation } from '@react-navigation/native';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import AssetList from '../components/AssetList/AssetList';
+import { addToWatchlist, getRates } from '../store/actions';
 import COLORS from '../styles/Colors';
-import { getRates } from '../store/actions';
 
-const RatesListScreen = ( { rates, loading, error, getRates } ) => {
+const RatesListScreen = ( { rates, loading, error, watchlist, getRates } ) => {
+	const dispatch = useDispatch();
 	const navigation = useNavigation();
+
+	const handleAddToWatchlist = id => {
+		if(!watchlist.includes(id)){
+			dispatch(addToWatchlist(id));
+			Alert.alert(
+				"Tipo de cambio agregado!",
+				`Se ha agregado el ${rates.find(item => item.id === id).name} a tu watchlist`,
+				[
+					{ text: "OK" }
+				]
+			);    
+		} else {
+			Alert.alert(
+				"Error",
+				`El ${rates.find(item => item.id === id).name} ya está en tu watchlist!`,
+				[
+					{ text: "OK" }
+				]
+			);
+		}  		
+	}
 
 	return (
 		<>
@@ -29,6 +51,7 @@ const RatesListScreen = ( { rates, loading, error, getRates } ) => {
 						navigation={navigation} 
 						refreshing={loading} 
 						onRefresh={getRates}
+						onAdd={handleAddToWatchlist}
 					/>	
 				}
 			</View>
@@ -58,7 +81,8 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => ({
 	rates: state.rates,
 	loading: state.loading,
-	error: state.error
+	error: state.error,
+	watchlist: state.watchlist
 })
 
 const mapDispatchToProps = dispatch => ({

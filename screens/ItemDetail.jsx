@@ -13,6 +13,15 @@ const ItemDetail = ({route}) => {
 	const [error, setError] = useState();
 	let historyAvailable = true && item.sparkline?.length > 0;
 	let priceColor = item.prev_value != item.value ? item.prev_value > item.value ? 'red' : '#13ba15' : 'lightgrey';
+	let variation;
+
+	if(item.value > item.prev_value){
+		variation = `+ ${((item.value / item.prev_value - 1) * 100).toFixed(2)} %`;
+	} else if (item.value < item.prev_value){
+		variation = `- ${((1 - item.value / item.prev_value) * 100).toFixed(2)} %`;
+	} else {
+		variation = '0 %';
+	}
 
 	const getHistoricalValues = async asset => {
 		try {
@@ -48,7 +57,6 @@ const ItemDetail = ({route}) => {
 	return (
 		<>
 			<View style={styles.screen}>
-				{/* <Header/> */}
 				<View style={styles.content}>	
 					<View style={styles.asset}>
 						<View style={styles.textContainer} >
@@ -57,14 +65,7 @@ const ItemDetail = ({route}) => {
 						</View>
 						<View style={styles.priceContainer}>
 							<Text style={{...styles.assetPrice, color: priceColor}}>{`${item.value} ${item.currency}`}</Text>
-							<Text style={{...styles.variation, color: priceColor}}>
-								{
-									`${item.prev_value && item.value < item.prev_value ? '-' : ''} ${item.value === item.prev_value ?
-									0 : item.value > item.prev_value ?
-									((item.value / item.prev_value - 1) * 100).toFixed(2)
-									: ((1 - item.value / item.prev_value) * 100).toFixed(2)} %`
-								}
-							</Text>
+							<Text style={{...styles.variation, color: priceColor}}>{ variation }</Text>
 						</View>					
 					</View>	
 					<View style={styles.chartContainer}>
@@ -81,7 +82,6 @@ const ItemDetail = ({route}) => {
 						}
 					</View>					
 				</View>
-				
 			</View>
 			<StatusBar style="light"/>
 		</>
@@ -91,9 +91,6 @@ const ItemDetail = ({route}) => {
 /**
  
  */
-
-
-const { width, height } = Dimensions.get('screen')
 
 const styles = StyleSheet.create({
 	screen: {
@@ -115,12 +112,13 @@ const styles = StyleSheet.create({
 	},
 	textContainer: {
 		//marginTop: '10%',
-		flexDirection: 'row',
+		//flexDirection: 'row',
 		alignItems: 'center',	
 	},
 	priceContainer: {
 		//marginTop: '10%',
-		flexDirection: 'column',
+		//marginLeft: 50,
+		
 	},
 	asset:{
 		width: '100%',
@@ -130,22 +128,22 @@ const styles = StyleSheet.create({
 		paddingRight: 5
 	},
 	assetName: {
-		fontSize: 22,
+		fontSize: 20,
 		fontFamily: 'montserrat-bold',
 		color: COLORS.mainFont,
-		padding: 10,
+		//paddingLeft: 5,
 	},
 	assetTicker: {
 		fontSize: 15,
 		fontFamily: 'montserrat-regular',
 		color: 'lightgrey',
-		padding: 10,
-		marginTop: 4,
+		//padding: 10,
+		//marginTop: 4,
 	},
 	assetPrice: {
 		fontSize: 20,
 		fontFamily: 'montserrat-regular',
-		textAlign: 'right'
+		textAlign: 'center'
 	},
 	variation: {
 		fontFamily: 'montserrat-regular',
