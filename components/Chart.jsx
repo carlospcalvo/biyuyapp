@@ -6,15 +6,17 @@ import COLORS from '../styles/Colors';
 const screenWidth = Dimensions.get("window").width;
 
 const Chart = ({ asset, historyAvailable, rawData = [] })=> {
+	let color = asset.prev_value > asset.value ? 'red' : '#13ba15';
+
 	let data = {
 		datasets: [
 			{
 				data: rawData,
-				color: (opacity = 1) => asset.prev_value > asset.value ? 'red' : '#13ba15', // optional
+				color: (opacity = 1) => color, // optional
 				strokeWidth: 2 // optional
 			}
 		],
-		legend: [`Evolución último mes`] 
+		legend: [`Evolución últimos 30 días`] 
 	};
 
 	let chartConfig = {
@@ -24,7 +26,8 @@ const Chart = ({ asset, historyAvailable, rawData = [] })=> {
 		backgroundGradientToOpacity: 0.5,
 		color: () => COLORS.auxiliary,
 		strokeWidth: 1, // optional, default 3
-		useShadowColorFromDataset: false, // optional
+		useShadowColorFromDataset: true, // optional
+		propsForLabels: ''
 	};
 	
 
@@ -34,11 +37,12 @@ const Chart = ({ asset, historyAvailable, rawData = [] })=> {
 				historyAvailable ?				
 				<LineChart
 					data={data}
-					width={screenWidth * 0.9}
+					width={screenWidth * 0.85}
 					height={256}
 					verticalLabelRotation={0}
 					chartConfig={chartConfig}
 					bezier				
+					yLabelsOffset={5}
 					transparent
 					withVerticalLines={false}
 					withHorizontalLines
@@ -59,7 +63,6 @@ const Chart = ({ asset, historyAvailable, rawData = [] })=> {
 const styles = StyleSheet.create({
 	chartContainer: {
 		marginVertical: 25,
-		
 	},
 	unavailable: {
 		color: COLORS.mainFont,

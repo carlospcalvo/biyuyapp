@@ -7,20 +7,23 @@ import {
 	GET_EXCHANGE_RATES_BEGIN,
 	GET_EXCHANGE_RATES_SUCCESS,
 	GET_EXCHANGE_RATES_FAILURE,
+	LOAD_WATCHLIST,
 } from "./actions";
 
 const INITIAL_STATE = {
     rates: [],
 	cryptos: [],
-	watchlist: ["dolar_blue", "bitcoin", "ethereum"],
+	watchlist: [],
     loading: false,
     error: null,
 }
 
 const MainReducer = (state = INITIAL_STATE, action) => {
 	switch (action.type) {
+		case LOAD_WATCHLIST: 
+			return { ...state, watchlist: [...state.watchlist, ...action.payload.watchlist] }
 		case ADD_TO_WATCHLIST:
-			return { ...state, watchlist: state.watchlist.concat(action.payload.id) }
+			return { ...state, watchlist: [ ...state.watchlist, action.payload.id ] }
 		case REMOVE_FROM_WATCHLIST:
 			return { ...state, watchlist: state.watchlist.filter(id => id !== action.payload.id) }
 		case GET_CRYPTO_VALUES_BEGIN:

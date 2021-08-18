@@ -108,7 +108,8 @@ const styles = StyleSheet.create({
 	},
 	chartContainer: {
 		marginTop: '10%',
-		
+		paddingHorizontal: 0,
+		marginHorizontal: -10
 	},
 	textContainer: {
 		//marginTop: '10%',

@@ -19,11 +19,10 @@ const AssetList = ({ navigation, data, onDelete, onAdd, onRefresh, refreshing}) 
 			backgroundColor: onDelete ? "#A50104" : COLORS.pressed
 		}
 
-		let buttonHeight = item.ticker ? 61 : 51;
-
+		//Delete button for main screen, add button for rates and crypto screens
         return onDelete ? (			
 			<TouchableHighlight onPress={() => onPress(item.id)}>
-				<Animated.View style={{...styles.rowBack, backgroundColor: "#A50104", height: buttonHeight}}>
+				<Animated.View style={{...styles.rowBack, backgroundColor: "#A50104"}}>
 					<Animated.View style={slideButtonStyle}>
 						<Ionicons name="trash-bin-outline" size={50} color="white" />
 					</Animated.View>	
@@ -32,7 +31,7 @@ const AssetList = ({ navigation, data, onDelete, onAdd, onRefresh, refreshing}) 
 		)
 		: (
 			<TouchableHighlight onPress={() => onPress(item.id)}>
-				<Animated.View style={{...styles.rowBack, height: buttonHeight}}>
+				<Animated.View style={styles.rowBack}>
 					<Animated.View style={slideButtonStyle}>
 						<Ionicons name="add" size={50} color='#13ba15' /> 
 					</Animated.View>	
@@ -97,7 +96,8 @@ const styles = StyleSheet.create({
 		borderBottomColor: COLORS.auxiliary,
 		borderBottomWidth: 1, 
 		borderTopColor: COLORS.background,
-		borderTopWidth: 1,
+		borderTopWidth: 1, 
+		height: 61
 	},
 });
 

@@ -1,13 +1,13 @@
-import React, { useState, useCallback } from 'react'
-import { View, StyleSheet, TouchableWithoutFeedback, Keyboard, Text, RefreshControl } from 'react-native'
-import { StatusBar } from 'expo-status-bar'
+import React, { useEffect } from 'react';
+import { View, StyleSheet, TouchableWithoutFeedback, Keyboard, Text, RefreshControl } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
 import { useNavigation } from '@react-navigation/core';
 import { useDispatch, connect } from 'react-redux';
-import AssetList from '../components/AssetList/AssetList'
-import COLORS from '../styles/Colors'
-import { getCrypto, getRates, removeFromWatchlist } from '../store/actions'
+import AssetList from '../components/AssetList/AssetList';
+import { getCrypto, getRates, loadWatchlist, removeFromWatchlist } from '../store/actions';
+import COLORS from '../styles/Colors';
  
-const MainScreen = ({ watchlist, loading, getCrypto, getRates }) => {
+const MainScreen = ({ watchlist, loading, getCrypto, getRates, loadWatchlist }) => {
 	const dispatch = useDispatch();
 	const navigation = useNavigation();
 
@@ -62,15 +62,20 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => {
 	let crypto = state.cryptos.filter(item => state.watchlist.includes(item.id));
 	let rates = state.rates.filter(item => state.watchlist.includes(item.id));
+
+	let assets = [...crypto, ...rates];
+	let watchlist = state.watchlist.map(id => assets.find(asset => asset.id === id));
+
 	return {
-		watchlist: rates.concat(crypto),
+		watchlist,
 		loading: state.loading
 	}
 }
 
 const mapDispatchToProps = dispatch => ({
 	getRates: () => dispatch(getRates()),
-	getCrypto: () => dispatch(getCrypto())
+	getCrypto: () => dispatch(getCrypto()),
+	loadWatchlist: () => dispatch(loadWatchlist()),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(MainScreen);

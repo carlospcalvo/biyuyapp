@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Modal as RNModal, StyleSheet, Text, ScrollView, View, Dimensions, SectionList, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
+import React from 'react';
+import { Modal as RNModal, StyleSheet, Text, Platform, View, Dimensions, SectionList, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
 import COLORS from '../../styles/Colors';
 import AssetListItem from '../AssetList/AssetListItem';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -11,7 +11,6 @@ const ModalAddItem = ({ modalVisible, closeModal, watchlist }) => {
 	const cryptos = useSelector(state => state.cryptos);
 	const rates = useSelector(state => state.rates);
 
-	//let watchlistIDs = watchlist.map(asset => asset.id);
 	let cryptoIds = cryptos.map(crypto => crypto.id);
 	let rateIds = rates.map(rate => rate.id);
 	let assets = rates.concat(cryptos)
@@ -36,7 +35,6 @@ const ModalAddItem = ({ modalVisible, closeModal, watchlist }) => {
 			transparent
 			
 		>
-			{/* SI NO ANDA AL QUERER AGREGAR PROBAR DE QUITAR EL TOUCHABLEWITHOUTFEEDBACK */}
 			<TouchableWithoutFeedback onPress={() => closeModal()}>
 				<View style={styles.screen}>
 					<View style={styles.container}>
@@ -52,16 +50,19 @@ const ModalAddItem = ({ modalVisible, closeModal, watchlist }) => {
 								</TouchableOpacity>
 							) }
 							renderSectionHeader={({ section: { title } }) => (
-								<View style={styles.headerContainer}>
-									<Text style={styles.header}>{title}</Text>
-								</View>							
+								<View style={{backgroundColor: COLORS.pressed}}>
+									<View style={Platform.OS === 'android' ? styles.headerContainerAndroid : styles.headerContainer}>
+										<Text style={styles.header}>{title}</Text>
+									</View>
+								</View>
 							)}
+							contentContainerStyle={Platform.OS === 'android' ? styles.sectionListAndroid : {}}
+							stickySectionHeadersEnabled
 							style={styles.sectionList}
 						/>
 					</View>
 				</View>			
 			</TouchableWithoutFeedback>
-						
 		</RNModal>
 	);
 };
@@ -82,20 +83,39 @@ const styles = StyleSheet.create({
 		paddingVertical: '5%'
 	},
 	sectionList: {
-		borderRadius: 10,
+		borderBottomRightRadius: 20,
+		borderBottomLeftRadius: 20,
+		borderTopRightRadius: 20,
+		borderTopLeftRadius: 20, 
 		height: '80%',
-		margin: 20
+		margin: 20,
+		overflow: 'hidden',
+	},
+	sectionListAndroid: {
+		borderBottomRightRadius: 20,
+		borderBottomLeftRadius: 20,
+		borderTopRightRadius: 20,
+		borderTopLeftRadius: 20, 
+		borderRadius: 20,
+		overflow: 'hidden'
 	},
 	headerContainer: {
 		backgroundColor: COLORS.header,
 		paddingHorizontal: width * 0.05,
+		overflow: 'hidden'
 	},	
+	headerContainerAndroid: {
+		borderTopRightRadius: 20,
+		borderTopLeftRadius: 20, 
+		backgroundColor: COLORS.header,
+		paddingHorizontal: width * 0.05,
+		overflow: 'hidden'
+	},
 	header: {
 		fontSize: 32,
 		color: COLORS.mainFont,
 		fontFamily: 'montserrat-bold',
 		marginVertical: '5%'
-		//backgroundColor: "red"
 	},
 	closeButton: {
 		alignSelf: 'flex-end',

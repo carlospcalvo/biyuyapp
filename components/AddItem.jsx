@@ -8,8 +8,6 @@ import COLORS from '../styles/Colors';
 const AddItem = () => {
 	const [modalVisible, setModalVisible] = useState(false);
 	const watchlist = useSelector(state => state.watchlist);
-	const cryptos = useSelector(state => state.cryptos);
-	const rates = useSelector(state => state.rates);
 	
 	const handleModalClose = () => setModalVisible(false);
 

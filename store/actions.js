@@ -1,6 +1,8 @@
 import axios from "axios";
+import { insertItemToWatchlist, deleteItemFromWatchlist, getWatchlist } from "../db";
 import { RATES_API_URL, RATES_API_TOKEN } from '@env';
 
+export const LOAD_WATCHLIST = 'LOAD_WATCHLIST';
 export const ADD_TO_WATCHLIST = 'ADD_TO_WATCHLIST';
 export const REMOVE_FROM_WATCHLIST = 'REMOVE_FROM_WATCHLIST';
 
@@ -14,15 +16,56 @@ export const GET_EXCHANGE_RATES_FAILURE = 'GET_EXCHANGE_RATES_FAILURE';
 
 // Common actions
 
-export const addToWatchlist = id => ({
-    type: ADD_TO_WATCHLIST,
-    payload: { id }
-});
+export const loadWatchlist = () => {
+    return async dispatch => {
+        try {
+            const result = await getWatchlist();
+            dispatch({ 
+                type: LOAD_WATCHLIST, 
+                payload: {
+                    watchlist: result.rows._array.map(item => item.id)
+                } 
+            });
+        } catch (error) {
+            console.error(error.message);
+            throw new Error('No se pudo cargar la watchlist!');
+        }
+    }
+}
 
-export const removeFromWatchlist = id => ({
-    type: REMOVE_FROM_WATCHLIST,
-    payload: { id }
-});
+export const addToWatchlist = id => {
+    return async dispatch => { 
+        try {
+            const result = await insertItemToWatchlist(id);
+            if(result.rowsAffected === 1){
+                dispatch({
+                    type: ADD_TO_WATCHLIST,
+                    payload: { id }
+                });
+            }
+        } catch (error) {
+            console.error(error.message);
+            throw error;
+        }
+    }
+}
+
+export const removeFromWatchlist = id => {
+        return async dispatch => { 
+        try {
+            const result = await deleteItemFromWatchlist(id);
+            if(result.rowsAffected === 1){
+                dispatch({
+                    type: REMOVE_FROM_WATCHLIST,
+                    payload: { id }
+                });
+            }
+        } catch (error) {
+            console.error(error.message);
+            throw error;
+        }
+    }
+}
 
 // Cryptos
 

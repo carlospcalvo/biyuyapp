@@ -18,7 +18,7 @@ const AssetListItem = ({ item, hidePrice = false }) => {
 		item &&
 		<View style={styles.listItem}>
 			<View style={styles.asset}>
-				<View style={item.ticker ? styles.textContainer : styles.textContainerNoTicker}>
+				<View style={item.ticker ? styles.textContainer : {...styles.textContainerNoTicker, marginTop: hidePrice ? 15 : 0}}>
 					<Text style={styles.assetName}>{item.name}</Text>
 					{ item.ticker && <Text style={styles.assetTicker}>{item.ticker}</Text> }
 				</View>
@@ -57,10 +57,10 @@ const styles = StyleSheet.create({
 		marginVertical: 5
 	},
 	textContainerNoTicker: {
-		flexDirection: 'row',
-		justifyContent: 'space-evenly',
+		//flexDirection: 'row',
+		justifyContent: 'center',
 		alignItems: 'center',
-		marginTop: 0,
+		//marginTop: 10,
 	},
 	priceContainer: {
 		marginRight: 5,

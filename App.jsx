@@ -6,8 +6,13 @@ import { NavigationContainer } from '@react-navigation/native'
 import TabNavigator from './navigation/TabNavigator'
 import * as Font from 'expo-font'
 import store from './store';
+import { init } from './db';
+import { getCrypto, getRates, loadWatchlist } from './store/actions';
 import COLORS from './styles/Colors';
-import { getCrypto, getRates } from './store/actions';
+
+init()
+.then(() => console.log('Database initialized'))
+.catch(err => console.log('Database failed to connect: ', err));
 
 const App = () => {
 	const [fontsLoaded, setFontsLoaded] = useState(false)
@@ -22,6 +27,7 @@ const App = () => {
 	  	// do API calls here
 		await store.dispatch(getCrypto());
 		await store.dispatch(getRates());
+		await store.dispatch(loadWatchlist());
 	}
 
 	return (
