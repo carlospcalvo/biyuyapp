@@ -1,19 +1,19 @@
-import React, { useState } from 'react'
-import { Dimensions, StyleSheet, Text, View } from 'react-native'
-import Tab from './Tab'
-import COLORS from '../styles/Colors'
+import React, { useState } from 'react';
+import { Dimensions, StyleSheet, View } from 'react-native';
+import Tab from './Tab';
+import COLORS from '../styles/Colors';
 
-const { width } = Dimensions.get('screen')
+const { width } = Dimensions.get('screen');
 
 const TabBar = ({ state, navigation, icons }) => {
-	const [selected, setSelected] = useState('Home')
-	const { routes } = state
+	const [selected, setSelected] = useState('Home');
+	const { routes } = state;
 
 	const renderColor = currentTab => currentTab === selected ? COLORS.pressed : COLORS.header   
 	const handlePress = (activeTab, index) => {
 		if(state.index !== index){
-			setSelected(activeTab)
-			navigation.navigate(activeTab)
+			setSelected(activeTab);
+			navigation.navigate(activeTab);
 		}
 	}
 
@@ -34,18 +34,15 @@ const TabBar = ({ state, navigation, icons }) => {
 				}
 			</View>
 		</View>
-	)
+	);
 }
 
 const styles = StyleSheet.create({
 	wrapper: {
-		//position: 'absolute',
 		bottom: 0,
 		width,
 		height: '10%',
-		//backgroundColor: Colors.header,
 		justifyContent: 'space-evenly',
-		
 	},
 	container: {
 		flexDirection: 'row',
@@ -53,6 +50,6 @@ const styles = StyleSheet.create({
 		elevation: 5,
 		height: '100%'
 	},
-})
+});
 
-export default TabBar
+export default TabBar;

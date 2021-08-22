@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, TouchableHighlight, View } from 'react-native';
-import COLORS from '../../styles/Colors'
+import COLORS from '../../styles/Colors';
 
 const AssetListItem = ({ item, hidePrice = false }) => {
 	let variation;
@@ -52,15 +52,12 @@ const styles = StyleSheet.create({
 		paddingRight: 5,
 	},
 	textContainer: {
-		//flexDirection: 'row',
 		justifyContent: 'center',	
 		marginVertical: 5
 	},
 	textContainerNoTicker: {
-		//flexDirection: 'row',
 		justifyContent: 'center',
 		alignItems: 'center',
-		//marginTop: 10,
 	},
 	priceContainer: {
 		marginRight: 5,
@@ -77,7 +74,6 @@ const styles = StyleSheet.create({
 		fontFamily: 'montserrat-regular',
 		color: 'lightgrey',
 		paddingHorizontal: 10,
-		//marginTop: 4,
 	},
 	assetPrice: {
 		fontSize: 20,

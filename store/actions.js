@@ -1,15 +1,18 @@
 import axios from "axios";
-import { insertItemToWatchlist, deleteItemFromWatchlist, getWatchlist } from "../db";
+import * as date from "date-fns";
+import { insertItemToWatchlist, deleteItemFromWatchlist, getWatchlist, insertItemsToOfflineCryptos, insertItemsToOfflineRates, getOfflineCryptos, getOfflineRates } from "../db";
 import { RATES_API_URL, RATES_API_TOKEN } from '@env';
 
 export const LOAD_WATCHLIST = 'LOAD_WATCHLIST';
 export const ADD_TO_WATCHLIST = 'ADD_TO_WATCHLIST';
 export const REMOVE_FROM_WATCHLIST = 'REMOVE_FROM_WATCHLIST';
 
+export const LOAD_CRYPTO = 'LOAD_CRYPTO';
 export const GET_CRYPTO_VALUES_BEGIN = 'GET_CRYPTO_VALUES_BEGIN';
 export const GET_CRYPTO_VALUES_SUCCESS = 'GET_CRYPTO_VALUES_SUCCESS';
 export const GET_CRYPTO_VALUES_FAILURE = 'GET_CRYPTO_VALUES_FAILURE';
 
+export const LOAD_RATES = 'LOAD_RATES';
 export const GET_EXCHANGE_RATES_BEGIN = 'GET_EXCHANGE_RATES_BEGIN';
 export const GET_EXCHANGE_RATES_SUCCESS = 'GET_EXCHANGE_RATES_SUCCESS';
 export const GET_EXCHANGE_RATES_FAILURE = 'GET_EXCHANGE_RATES_FAILURE';
@@ -28,7 +31,6 @@ export const loadWatchlist = () => {
             });
         } catch (error) {
             console.error(error.message);
-            throw new Error('No se pudo cargar la watchlist!');
         }
     }
 }
@@ -45,7 +47,6 @@ export const addToWatchlist = id => {
             }
         } catch (error) {
             console.error(error.message);
-            throw error;
         }
     }
 }
@@ -62,12 +63,27 @@ export const removeFromWatchlist = id => {
             }
         } catch (error) {
             console.error(error.message);
-            throw error;
         }
     }
 }
 
 // Cryptos
+
+export const loadCrypto = () => {
+    return async dispatch => {
+        try {
+            const result = await getOfflineCryptos();
+            dispatch({ 
+                type: LOAD_CRYPTO, 
+                payload: {
+                    cryptos: result.rows._array
+                } 
+            });
+        } catch (error) {
+            console.error(error.message);
+        }
+    }
+}
 
 export const getCryptosBegin = () => ({
     type: GET_CRYPTO_VALUES_BEGIN
@@ -98,8 +114,18 @@ export const getCrypto = (currency = 'usd', orderBy = 'market_cap_desc', sparkli
                     value: crypto.current_price,
                     prev_value: crypto.current_price - crypto.price_change_24h,
                     currency: 'USD',
-                    sparkline: crypto.sparkline_in_7d.price
+                    sparkline: crypto.sparkline_in_7d.price,
+                    timestamp: date.format(new Date(crypto.last_updated), 't'),
+                    time: date.format(new Date(crypto.last_updated), 'yyyy-MM-dd')
                 }));
+                
+                try {
+                    insertItemsToOfflineCryptos(info)
+                    .then( () => console.log('Crypto values inserted successfully in DB'));
+                } catch (error) {
+                    console.log('Error trying to update offline crypto database: ', error);
+                }
+
                 dispatch(getCryptoSuccess(info));
             } else {
                 dispatch(getCryptoFailure(response.data));
@@ -109,6 +135,22 @@ export const getCrypto = (currency = 'usd', orderBy = 'market_cap_desc', sparkli
 }
 
 // Rates
+
+export const loadRates = () => {
+    return async dispatch => {
+        try {
+            const result = await getOfflineRates();
+            dispatch({ 
+                type: LOAD_RATES, 
+                payload: {
+                    rates: result.rows._array
+                } 
+            });
+        } catch (error) {
+            console.error(error.message);
+        }
+    }
+}
 
 export const getRatesBegin = () => ({
     type: GET_EXCHANGE_RATES_BEGIN
@@ -138,6 +180,12 @@ export const getRates = () => {
             },
         }).then(response => {
             if(response.status == 200){
+                try {
+                    insertItemsToOfflineRates(response.data)
+                    .then( () => console.log('Rate values inserted successfully in DB'));
+                } catch (error) {
+                    console.log('Error trying to update offline rates database: ', error);
+                }
                 dispatch(getRatesSuccess(response.data));
             } else {
                 dispatch(getRatesFailure(response.data));

@@ -8,6 +8,8 @@ import {
 	GET_EXCHANGE_RATES_SUCCESS,
 	GET_EXCHANGE_RATES_FAILURE,
 	LOAD_WATCHLIST,
+	LOAD_CRYPTO,
+	LOAD_RATES,
 } from "./actions";
 
 const INITIAL_STATE = {
@@ -22,6 +24,10 @@ const MainReducer = (state = INITIAL_STATE, action) => {
 	switch (action.type) {
 		case LOAD_WATCHLIST: 
 			return { ...state, watchlist: [...state.watchlist, ...action.payload.watchlist] }
+		case LOAD_CRYPTO: 
+			return { ...state, cryptos: [...state.cryptos, ...action.payload.cryptos] }
+		case LOAD_RATES: 
+			return { ...state, rates: [...state.rates, ...action.payload.rates] }
 		case ADD_TO_WATCHLIST:
 			return { ...state, watchlist: [ ...state.watchlist, action.payload.id ] }
 		case REMOVE_FROM_WATCHLIST:

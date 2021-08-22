@@ -1,10 +1,11 @@
 {
   "expo": {
-    "name": "biyuyapp",
-    "slug": "biyuyapp",
+    "name": "Biyuyapp",
+    "slug": "Biyuyapp",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/biyuyapp_icon.png",
+    "platforms": ["ios", "android"],
     "splash": {
       "image": "./assets/biyuyapp_logo.png",
       "resizeMode": "contain",
@@ -17,16 +18,17 @@
       "**/*"
     ],
     "ios": {
+      "bundleIdentifier": "com.biyuyapp.app",
+      "buildNumber": "1.0.0",
       "supportsTablet": true
     },
     "android": {
+      "package": "com.biyuyapp.app",
+      "versionCode": 1,
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
-      }
-    },
-    "web": {
-      "favicon": "./assets/favicon.png"
+        "foregroundImage": "./assets/biyuyapp_icon.png",
+        "backgroundColor": "#12263A"
+      }      
     },
     "androidStatusBar": {
       "barStyle": "light-content"

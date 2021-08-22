@@ -1,13 +1,14 @@
-import React, { useState } from 'react'
-import { View } from 'react-native'
-import { Provider } from 'react-redux'
-import AppLoading from 'expo-app-loading'
-import { NavigationContainer } from '@react-navigation/native'
-import TabNavigator from './navigation/TabNavigator'
+import React, { useState } from 'react';
+import { View } from 'react-native';
+import { Provider } from 'react-redux';
+import AppLoading from 'expo-app-loading';
+import { NavigationContainer } from '@react-navigation/native';
+import TabNavigator from './navigation/TabNavigator';
 import * as Font from 'expo-font'
 import store from './store';
 import { init } from './db';
-import { getCrypto, getRates, loadWatchlist } from './store/actions';
+import NetInfo from '@react-native-community/netinfo';
+import { getCrypto, getRates, loadWatchlist, loadCrypto, loadRates } from './store/actions';
 import COLORS from './styles/Colors';
 
 init()
@@ -25,9 +26,16 @@ const App = () => {
 		});
 	  
 	  	// do API calls here
-		await store.dispatch(getCrypto());
-		await store.dispatch(getRates());
 		await store.dispatch(loadWatchlist());
+		await store.dispatch(loadRates());
+		await store.dispatch(loadCrypto());
+
+		NetInfo.fetch().then( async state => {
+			if(state.isConnected){
+				await store.dispatch(getCrypto());
+				await store.dispatch(getRates());
+			}
+		});
 	}
 
 	return (

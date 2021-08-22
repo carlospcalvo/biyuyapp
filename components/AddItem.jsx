@@ -35,7 +35,6 @@ const AddItem = () => {
 
 const styles = StyleSheet.create({
 	inputContainer: {
-		//flexDirection: 'row',
 		alignItems: 'center',
 		justifyContent: 'center',
 		marginVertical: '2.5%',
@@ -44,13 +43,9 @@ const styles = StyleSheet.create({
 		borderRadius: 100,
 		justifyContent: 'center',
 		alignItems: 'center',
-		//padding: 10,
-		//marginVertical: 5
 	},
 	addButton: {
-		//backgroundColor: COLORS.primary,
 		padding: 0
-		//width: 90,
 	},
 	emptyListMessageContainer: {
 		marginBottom: '5%',
@@ -62,7 +57,4 @@ const styles = StyleSheet.create({
 	},	
 });
 
-
 export default AddItem;
-
-

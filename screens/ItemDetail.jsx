@@ -1,5 +1,5 @@
 import React, { useLayoutEffect, useState } from 'react';
-import { StyleSheet, Text, View, Dimensions, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, ActivityIndicator } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { RATES_API_URL, RATES_API_TOKEN } from '@env';
 import axios from 'axios';
@@ -7,7 +7,7 @@ import Chart from '../components/Chart';
 import COLORS from '../styles/Colors';
 
 const ItemDetail = ({route}) => {
-	const { item } = route.params
+	const { item } = route.params;
 	const [data, setData] = useState([0]);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState();
@@ -63,7 +63,7 @@ const ItemDetail = ({route}) => {
 							<Text style={styles.assetName}>{item.name}</Text>
 							{ item.ticker && <Text style={styles.assetTicker}>{item.ticker}</Text> }
 						</View>
-						<View style={styles.priceContainer}>
+						<View>
 							<Text style={{...styles.assetPrice, color: priceColor}}>{`${item.value} ${item.currency}`}</Text>
 							<Text style={{...styles.variation, color: priceColor}}>{ variation }</Text>
 						</View>					
@@ -88,10 +88,6 @@ const ItemDetail = ({route}) => {
 	);
 };
 
-/**
- 
- */
-
 const styles = StyleSheet.create({
 	screen: {
 		flex: 1,
@@ -112,14 +108,7 @@ const styles = StyleSheet.create({
 		marginHorizontal: -10
 	},
 	textContainer: {
-		//marginTop: '10%',
-		//flexDirection: 'row',
 		alignItems: 'center',	
-	},
-	priceContainer: {
-		//marginTop: '10%',
-		//marginLeft: 50,
-		
 	},
 	asset:{
 		width: '100%',
@@ -132,14 +121,11 @@ const styles = StyleSheet.create({
 		fontSize: 20,
 		fontFamily: 'montserrat-bold',
 		color: COLORS.mainFont,
-		//paddingLeft: 5,
 	},
 	assetTicker: {
 		fontSize: 15,
 		fontFamily: 'montserrat-regular',
 		color: 'lightgrey',
-		//padding: 10,
-		//marginTop: 4,
 	},
 	assetPrice: {
 		fontSize: 20,

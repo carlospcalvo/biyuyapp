@@ -10,9 +10,7 @@ const Stack = createStackNavigator();
 
 const HomeStackNavigator = () => {
 	return (
-		<Stack.Navigator mode='modal' /* screenOptions={{
-			headerTitle: () => <Header/>
-		  }} */ >
+		<Stack.Navigator mode='modal'>
 			<Stack.Screen 
 				name="Home"
 				component={MainScreen}
@@ -52,10 +50,7 @@ const HomeStackNavigator = () => {
 
 const CurrenciesStackNavigator = () => {
 	return (
-		<Stack.Navigator mode='modal' /* screenOptions={{
-			headerShown: false
-		  }} */
-		  >
+		<Stack.Navigator mode='modal' >
 			<Stack.Screen 
 				name="Monedas"
 				component={RatesListScreen}
@@ -138,6 +133,4 @@ export {
 	HomeStackNavigator,
 	CurrenciesStackNavigator,
 	CryptoStackNavigator
-};
-
-
+}

@@ -1,13 +1,15 @@
-import React from 'react';
+import React, { useLayoutEffect } from 'react';
 import { StyleSheet, Text, View, ActivityIndicator, Alert } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import AssetList from '../components/AssetList/AssetList';
 import { useNavigation } from '@react-navigation/native';
 import { connect, useDispatch } from 'react-redux';
-import { addToWatchlist, getCrypto } from '../store/actions';
+import { addToWatchlist, getCrypto, loadCrypto } from '../store/actions';
+import * as date from 'date-fns';
+import NetInfo from '@react-native-community/netinfo';
 import COLORS from '../styles/Colors';
 
-const CryptoListScreen = ({ prices, loading, error, watchlist, getCrypto }) => {
+const CryptoListScreen = ({ prices, loading, error, watchlist, getCrypto, loadCrypto }) => {
 	const dispatch = useDispatch();
 	const navigation = useNavigation();
 
@@ -32,11 +34,22 @@ const CryptoListScreen = ({ prices, loading, error, watchlist, getCrypto }) => {
 		}  
 	}
 
+	useLayoutEffect(() => {
+		NetInfo.fetch().then(async state => {
+			console.log("Is connected?", state.isConnected);
+			state.isConnected ? getCrypto() : loadCrypto()
+		});
+	}, [])
+
 	return (
 		<>
 			<View style={styles.content}>
 				<View style={styles.titleContainer}>
 					<Text style={styles.title}>Criptomonedas</Text>
+					{
+						!loading && prices && 
+						<Text style={styles.lastUpdateText}>Última actualización: {date.format(new Date(date.fromUnixTime(prices[0].timestamp)), 'HH:mm dd/MM/yyyy')}</Text>
+					}
 				</View>
 				{
 					loading &&  
@@ -72,10 +85,16 @@ const styles = StyleSheet.create({
 		paddingTop: 20
 	},
 	title: {
+		textAlign:'center', 
 		color: COLORS.mainFont,
 		fontFamily: 'montserrat-bold',
 		fontSize: 20
-	}
+	},
+	lastUpdateText: {
+		color: COLORS.auxiliary,
+		fontFamily: 'montserrat-italic',
+		fontSize: 10
+	},
 })
 
 const mapStateToProps = state => ({
@@ -86,6 +105,7 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
+	loadCrypto: () => dispatch(loadCrypto()),
 	getCrypto: () => dispatch(getCrypto())
 })
 
