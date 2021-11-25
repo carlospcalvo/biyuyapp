@@ -1,7 +1,7 @@
 # biyuyapp
 🇦🇷 App mobile para ver la última cotización de criptomonedas y los principales tipos de cambio del dólar y euro en Argentina.
 
-🇬🇧 🇺🇸 Mobile app to keep track of the latest price of cryptocurrencies and some of the many US dollar and Euro exchange rates.
+🇬🇧 🇺🇸 🇦🇺 Mobile app to keep track of the latest price of cryptocurrencies and some of the many US dollar and Euro exchange rates.
 
 ## Dependencies
 
